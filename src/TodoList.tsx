@@ -1,14 +1,15 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import {FilterValuesType} from "./App";
+import {FilterValuesType, TasksObjectType} from "./App";
 
 type TodoListPropsType = {
     title: string
     task: Array<TaskPropsType>
-    removeTask: (id: string) => void
-    changeFilter: (value: FilterValuesType) => void
-    addTasks: (title: string) => void
+    removeTask: (todoListsId:string,id: string) => void
+    changeFilter: (todoListsId:string, value: FilterValuesType) => void
+    addTasks: (todoListsId:string,title: string) => void
     changeTaskStatus:(taskId:string, isDone:boolean)=>void
     filter:FilterValuesType
+    todoListsId:string
 }
 export type TaskPropsType = {
     id: string
@@ -28,21 +29,21 @@ export const TodoList = (props: TodoListPropsType) => {
     const onKeyPressNewTaskTitle = (e: KeyboardEvent<HTMLInputElement>) => {
         setError(null)
         if (e.charCode === 13) {
-            props.addTasks(newTaskTitle.trim());
+            props.addTasks(props.todoListsId, newTaskTitle.trim());
             setNewTaskTitle("");
         }
     }
 
     const onClickAddTask = () => {
        if(newTaskTitle.trim() !==""){
-           props.addTasks(newTaskTitle)
+           props.addTasks(props.todoListsId,newTaskTitle)
            setNewTaskTitle("")
        }else {
            setError("Name is required");
        }
     }
 
-    const changeFilter = (stringFilter:FilterValuesType) => {props.changeFilter(stringFilter)}
+    const changeFilter = (stringFilter:FilterValuesType) => {props.changeFilter(props.todoListsId, stringFilter)}
 
 
     return (
@@ -60,7 +61,7 @@ export const TodoList = (props: TodoListPropsType) => {
 
             <ul>
                 {props.task.map((el: TaskPropsType) => {
-                    const onClickRemoveTask = () => props.removeTask(el.id);
+                    const onClickRemoveTask = () => props.removeTask(props.todoListsId,el.id);
                     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
                     {props.changeTaskStatus(el.id, e.currentTarget.checked)}
                     return (
