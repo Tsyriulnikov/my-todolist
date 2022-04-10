@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import "./App.css";
 import {TodoList, TaskPropsType} from "./TodoList";
 import {v1} from "uuid";
+import AddItemForm from "./components/AddItemForm";
 
 
 export type FilterValuesType = "all" | "active" | "completed"
@@ -22,7 +23,7 @@ function App() {
 
     let [todoLists, setTodoLists] = useState<Array<TodoListsType>>([
         {id: todoListId1, title: "What lern", filter: 'all'},
-        {id: todoListId2, title: "What buy", filter: 'completed'}
+        {id: todoListId2, title: "What buy", filter: 'all'}
     ])
 
     let [tasks, setTasks] = useState<TasksObjectType>({
@@ -62,14 +63,31 @@ function App() {
 
 
     const deleteTodoList = (todoListsId: string) => {
-        setTodoLists(todoLists.filter(el=> el.id!==todoListsId))
-        let newTasks={...tasks}
+        setTodoLists(todoLists.filter(el => el.id !== todoListsId))
+        let newTasks = {...tasks}
         delete newTasks[todoListsId]
         setTasks(newTasks)
     }
 
+    const addTodoList = (value: string) => {
+        const newId: string = v1()
+        const newTodoList: TodoListsType = {id: newId, title: value, filter: 'all'}
+        setTodoLists([...todoLists, newTodoList])
+        setTasks({...tasks, [newId]: []})
+    }
+    const editTask = (todoListsId: string, idTask: string, value: string) => {
+        setTasks({
+            ...tasks, [todoListsId]: tasks[todoListsId].map(el => el.id === idTask ?
+                {...el, title: value} : ({...el}))
+        })
+    }
+
+    const changeNameTodoList = (todoListsId: string,value: string) =>{
+setTodoLists(todoLists.map(el=> el.id ===todoListsId ? {...el, title:value}:({...el})))
+    }
     return (
         <div className="App">
+            <AddItemForm callBack={addTodoList}/>
             {todoLists.map(tl => {
 
                     let tasksForTodoList = tasks[tl.id]
@@ -92,7 +110,12 @@ function App() {
                             addTasks={addTask}
                             changeTaskStatus={changeStatus}
                             filter={tl.filter}
-                            callBackDeleteTodoList={deleteTodoList}/>)
+                            callBackDeleteTodoList={deleteTodoList}
+                            editeTask={editTask}
+                            callBackChangeNameTodoList={changeNameTodoList}
+
+                        />)
+
                 }
             )}
         </div>
