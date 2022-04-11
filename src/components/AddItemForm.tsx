@@ -1,4 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import {Button, IconButton, TextField} from "@mui/material";
+import {AddToPhotos, ControlPoint, ElectricScooter} from "@mui/icons-material";
 type AddItemFormPropsType = {
     callBack:(value:string)=>void
 }
@@ -29,13 +31,21 @@ const AddItemForm:React.FC<AddItemFormPropsType>=(props)=>{
 
     return(
         <div>
-            <input value={newTaskTitle}
+            <TextField value={newTaskTitle}
+                       variant="outlined"
                    onChange={onChangeNewTaskTitle}
                    onKeyPress={onKeyPressNewTaskTitle}
-                   className={error ? "error" : ""}
+                   // className={error ? "error" : ""}
+                       label="Type value"
+                       helperText={error}
+                       error={!!error}
             />
-            <button onClick={onClickAddTask}>Add task</button>
-            {error && <div className="error-message">{error}</div>}
+             <IconButton onClick={onClickAddTask}
+             color={"primary"}
+            >
+                 <AddToPhotos/>
+             </IconButton>
+            {/*{error && <div className="error-message">{error}</div>}*/}
         </div>
     )
 }
