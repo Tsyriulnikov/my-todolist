@@ -108,12 +108,7 @@ export const slice = createSlice({
             .addCase(addTask.fulfilled, (state, action) => {
                 state[action.payload.todoListId].unshift(action.payload)
             })
-            .addCase(updateTask.fulfilled, (state, action) => {
-                const tasks = state[action.payload.todolistId]
-                const index = tasks.findIndex(t => t.id === action.payload.taskId)
-                if (index > -1) {
-                    tasks[index] = {...tasks[index], ...action.payload.model}
-                }
+           
             })
     }
 })
